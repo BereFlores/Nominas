@@ -1,0 +1,75 @@
+<html>
+<header>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="Plugins/jquery.js"></script>
+    <link rel="stylesheet" href="Plugins/css/bootstrap.css" class="">
+    <script src="Plugins/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="css/hoja1.css" class="">
+	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+</header>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Nóminas</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <!--     <li class="nav-item active">
+                    <a class="nav-link" href="#">Inicio <span class="sr-only">(current)</span></a>
+                </li>-->
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <button class="btn btn-outline-danger my-2 my-sm-0" onclick="regresar()" type="button">Salir</button>
+            </form>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12"><br><br></div>
+            <!-- <div class="col-md-12 alert alert-danger">
+                <strong>!Sistema en mantenimiento.</strong>Se puede presentar información faltante o errores
+            </div>-->
+            <div class="col-md-4">
+                <label class="">Nómina</label><input class="form-control" id="input-nomina" disabled/>
+            </div>
+            <div class="col-md-6">
+                <label class="">Nombre</label><input class="form-control" id="input-nombre" disabled/>
+            </div>
+            <div class="col-md-12"><br><br></div>
+			
+            <div class="col-md-4">
+                <select id="selectyear" class="form-control" onchange="changeYear()">
+                    <option id="default" value='0' selected disabled>Seleccione el año</option>
+                </select><br>
+            </div> <div id="idspin" class="spinner-border spinner-border-sm" style="display:none; margin-top: 1%"></div>
+            <label class="form-control list-group-item-info">Seleccione la semana</label>
+            <div class="list-group col-md-12 ex3" id="div-lista">
+                <!--<a class="list-group-item list-group-item-info">
+                    Seleccione la semana
+                </a>-->
+            </div>
+            <div class="col-md-12"><br><br></div>
+        </div>
+    </div>
+    <script src="js/nominas.js"></script>
+</body>
+
+</html>
+<script>
+    function regresar() {
+        location.href = "/Nominas/index.html";
+    }
+</script>
+<style>
+    .list-group {
+        max-height: 350px;
+        margin-bottom: 10px;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+</style>

@@ -1,0 +1,174 @@
+<html>
+<header>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="Plugins/jquery.js"></script>
+    <link rel="stylesheet" href="Plugins/css/bootstrap.css" class="">
+    <script src="Plugins/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="css/hoja1.css" class="">
+
+</header>
+
+<body>
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title">Nuevo usuario</h6>
+                </div>
+                <div class="modal-body">
+                    <label class="">Su contraseña es</label>
+                    <input class="form-control" id="id-contra" disabled value="" /><br><br>
+                    <div class="alert alert-danger" role="alert">
+                        <h5 style=" text-align: center;"><strong>Atención!</strong> Guarde esta contraseña para futuras consultas.
+                        </h5>
+                    </div>
+                </div>
+
+                <div style="align-content: center;" class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+            <div class="fadeIn first">
+                <img src="img/nomina.png" id="icon" alt="User Icon" />
+            </div>
+
+            <!-- Login Form -->
+            <form id="forma" autocomplete="off" method="post">
+                <!--<input type="text" id="CURP" class="" name="login" placeholder="CURP">-->
+                <input type="text" id="nomina" class="" name="nomina" placeholder="Número de nómina">
+                <input type="text" id="pass" class="" style="display: none;" name="pass" placeholder="Contraseña">
+                <br><br>
+                <input id="btn1" type="button" onclick="buscarUsuario()" class="fadeIn fourth" value="Enviar">
+                <input id="btn2" type="button" onclick="datosUsuario()" style="display: none;" class="fadeIn fourth" value="Enviar">
+            </form>
+        </div>
+    </div>
+
+</body>
+
+</html>
+<script>
+    function datosUsuario() {
+        //var curp= document.getElementById("CURP").value;
+        if (document.getElementById("pass").value == "") {
+            alert("Debe introducir la contraseña");
+        } else {
+            var password = document.getElementById("pass").value;
+            data = {
+                nomina: document.getElementById("nomina").value
+            }
+            $.ajax({
+                type: "POST",
+                url: 'usuariosBD.php',
+                data: data,
+                success: function(response) {
+                    var jsonData2 = JSON.parse(response);
+                    data = {
+                        nomina: document.getElementById("nomina").value
+                    }
+                    $.ajax({
+                        type: "POST",
+                        url: 'buscarUsuario.php',
+                        data: data,
+                        success: function(response) {
+                            var jsonData = JSON.parse(response);
+                            //console.log(jsonData);
+                            if (jsonData.Pass == password) {
+                                document.getElementById("forma").action = "lista.html?Nomina=" + jsonData2.Nomina + "&Nombre=" + jsonData2.Nombre;
+                                document.getElementById("forma").submit();
+                            } else {
+                                alert("Contraseña incorrecta");
+                            }
+                        }
+                    });
+                }
+            });
+
+        }
+    }
+
+    function buscarUsuario() {
+        //var curp= document.getElementById("CURP").value;
+        data = {
+            nomina: document.getElementById("nomina").value
+        }
+        $.ajax({
+            type: "POST",
+            url: 'nominaExiste.php',
+            data: data,
+            success: function(response) {
+                var jsonData = JSON.parse(response);
+                //console.log("Dato:" + jsonData);
+                if (jsonData == 0) {
+                    alert("Número de nómina no registrado");
+
+                } else {
+                    data = {
+                        nomina: document.getElementById("nomina").value
+                    }
+                    $.ajax({
+                        type: "POST",
+                        url: 'buscarUsuario.php',
+                        data: data,
+                        success: function(response) {
+                            var jsonData = JSON.parse(response);
+                            //  console.log("Dato:" + jsonData);
+                            if (jsonData != 0) {
+                                // console.log(jsonData);
+                                document.getElementById("pass").style.display = "";
+                                document.getElementById("btn1").style.display = "none";
+                                document.getElementById("btn2").style.display = "";
+
+                            } else {
+                                var numero = Math.floor(Math.random() * 500) + 100;
+                                var numero2 = Math.floor(Math.random() * 50) + 10;
+                                var clave = "T";
+                                clave = clave.concat(numero);
+                                clave = clave.concat("OP");
+                                clave = clave.concat(numero2);
+                                //console.log("la clave es :"+clave);
+                                data = {
+                                    nomina: document.getElementById("nomina").value,
+                                    clave: clave
+                                }
+                                $.ajax({
+                                    type: "POST",
+                                    url: 'enviarUsuario.php',
+                                    data: data,
+                                    success: function(response) {
+                                        var jsonData = JSON.parse(response);
+                                        // alert("Uusario nuevo su contraseña es: " + clave);
+                                        document.getElementById("id-contra").value = clave;
+                                        $('#myModal').modal({
+                                            backdrop: 'static',
+                                            keyboard: false
+                                        })
+                                        $("#myModal").modal("show");
+                                        document.getElementById("pass").style.display = "";
+                                        document.getElementById("btn1").style.display = "none";
+                                        document.getElementById("btn2").style.display = "";
+                                        //document.getElementById("forma").action = "lista.html?Nomina=" + jsonData.Nomina + "&Nombre=" + jsonData.Nombre + "&Planta=" + jsonData.Planta;
+                                        //document.getElementById("forma").submit();
+                                    }
+                                });
+
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+
+    }
+</script>
